@@ -13,7 +13,8 @@ export default function fetchCountries(countryName) {
       }
     })
     .catch(error => {
-      console.log('error', error);
+      refs.countryContainer.innerHTML = '';
+      console.log('error из catch в функции отдельной fetch', error);
       alert(error); //вызвать функцию библиотеки Pnotify
     });
 }

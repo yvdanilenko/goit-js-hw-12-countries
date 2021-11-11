@@ -20,19 +20,39 @@ const myStack = new PNotify.Stack({
 
 refs.searchForm.addEventListener('submit', onSearch);
 
+// refs.searchForm.addEventListener('input', _.debounce(onSearch, 500));
+
 function onSearch(e) {
   e.preventDefault();
 
   const form = e.currentTarget;
   // console.log(form.elements);
   const searchQuery = form.elements.query.value.trim();
+  refs.countryContainer.innerHTML = '';
+  myStack.close(true);
 
   if (!searchQuery) {
-    alert('введите данные для запроса');
+    // alert('введите данные для запроса');
+
+    PNotify.notice({
+      text: 'введите данные для запроса',
+      stack: myStack,
+      modules: new Map([...PNotify.defaultModules, [PNotifyMobile, {}]]),
+    });
+
+    return;
+  } else if (searchQuery.length > 11) {
+    // alert('Превышено количество допустимых символов');
+    PNotify.notice({
+      text: 'Превышено количество допустимых символов',
+      stack: myStack,
+      modules: new Map([...PNotify.defaultModules, [PNotifyMobile, {}]]),
+    });
+
     return;
   }
 
-  console.log('searchQuery', searchQuery);
+  // console.log('searchQuery', searchQuery);
 
   fetchCountries(searchQuery)
     .then(renderCountryCard)
@@ -42,51 +62,18 @@ function onSearch(e) {
 
 function renderCountryCard(country) {
   console.log('данные из бекенда', country);
+  console.log('country.name', country);
   const markup = countryCard(country);
-
   // console.log(markup);
+
   refs.countryContainer.innerHTML = markup;
 }
 
 function onFetchError(error) {
-  const form = e.currentTarget;
-  // console.log(form.elements);
-  const searchQuery = form.elements.query.value;
-  if (searchQuery > 0) {
-    console.log('errrr');
-  }
+  //   alert('Введите корректное название страны');
+  PNotify.notice({
+    text: 'Введите корректное название страны',
+    stack: myStack,
+    modules: new Map([...PNotify.defaultModules, [PNotifyMobile, {}]]),
+  });
 }
-
-// function onSearch(e) {
-//   e.preventDefault();
-
-//   const form = e.currentTarget;
-//   // console.log(form.elements);
-//   const searchQuery = form.elements.query.value;
-
-//   fetchCountries(searchQuery)
-//     .then(data => {
-//       refs.countryContainer.innerHTML = '';
-//       myStack.close(true);
-
-//       if (data.legth === 1) {
-//         refs.countryContainer.insertAdjacentElement('beforeend', renderCountryCard);
-//       } else if (data.length < 11) {
-//         data.forEach(country => console.log(country.name));
-//       } else if (data.length > 10) {
-//         PNotify.notice({
-//           text: 'many letters. enter less',
-//           stack: myStack,
-//           modules: new Map([...PNotify.defaultModules, [PNotifyMobile, {}]]),
-//         });
-//       }
-//     })
-//     .catch(
-//       PNotify.notice({
-//         title: 'ERROR!',
-//         text: 'the country was not found. try again',
-//         stack: myStack,
-//         modules: new Map([...PNotify.defaultModules, [PNotifyMobile, {}]]),
-//       }),
-//     );
-// }

@@ -1,3 +1,14 @@
 body {
   background-color: burlywood;
 }
+
+.input__control,
+h1,
+.country__data {
+  display: flex;
+  justify-content: center;
+}
+
+input {
+  font-size: 40px;
+}
