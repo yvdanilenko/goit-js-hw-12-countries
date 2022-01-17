@@ -3,7 +3,7 @@ import '../css/styles.css';
 import countryCard from '../tamplates/country-card.hbs';
 import fetchCountries from './fetch-countries-api';
 
-import * as _ from 'lodash';
+import debounce from 'lodash.debounce';
 
 import * as PNotify from '@pnotify/core';
 import * as PNotifyMobile from '@pnotify/mobile';
@@ -18,9 +18,9 @@ const myStack = new PNotify.Stack({
   dir1: 'up',
 });
 
-refs.searchForm.addEventListener('submit', onSearch);
+// refs.searchForm.addEventListener('submit', onSearch);
 
-// refs.searchForm.addEventListener('input', _.debounce(onSearch, 500));
+refs.searchForm.addEventListener('input', debounce(onSearch, 500));
 
 function onSearch(e) {
   e.preventDefault();
@@ -77,3 +77,9 @@ function onFetchError(error) {
     modules: new Map([...PNotify.defaultModules, [PNotifyMobile, {}]]),
   });
 }
+
+window.onload = function () {
+  let loader = document.getElementById('loader');
+
+  loader.style.display = 'none';
+};
